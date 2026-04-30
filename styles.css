@@ -1,56 +1,97 @@
+:root {
+  --bg: #0f172a;
+  --card: #111827;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+}
+
+* { box-sizing: border-box; }
+
 body {
-  font-family: -apple-system, sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
   margin: 0;
+  font-family: -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .container {
-  max-width: 700px;
-  margin: 60px auto;
-  padding: 20px;
+  width: min(1100px, 92%);
+  margin: auto;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.logo { font-weight: bold; }
+
+nav a {
+  color: var(--muted);
+  margin-left: 15px;
+  text-decoration: none;
+}
+
+.hero {
+  text-align: center;
+  padding: 80px 0;
+}
+
+.hero h1 { font-size: 40px; }
+.hero p { color: var(--muted); }
+
+button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+}
+
+button:hover { background: var(--primary-hover); }
+
+.section { padding: 60px 0; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
 }
 
 .card {
-  background: #111827;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+form {
+  background: var(--card);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 input, textarea, select {
   width: 100%;
   padding: 10px;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  border: none;
+  margin: 10px 0;
   background: #1f2937;
-  color: white;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  background: #3b82f6;
   border: none;
   border-radius: 8px;
   color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #2563eb;
-}
-
-h1 {
-  text-align: center;
 }
 
 .status {
-  text-align: center;
   margin-top: 10px;
-  font-size: 14px;
-  opacity: 0.8;
+  color: var(--muted);
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
 }
