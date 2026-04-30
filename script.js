@@ -1,9 +1,8 @@
-// 1. Supabase setup (replace these with your real values)
-const supabaseUrl = "https://xyzproject.supabase.co";     // from Settings → API
-const supabaseAnonKey = "your_anon_key_here";            // public/anon key
+// 1. Initialize Supabase client
+const supabaseUrl = "https://ozhjabqkrnqxpphnyldz.supabase.co";  // <-- your project URL
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aGphYnFrcm5xeHBwaG55bGR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzQ3ODksImV4cCI6MjA5MzE1MDc4OX0.Gq4Rb0778UsSAD_7DuyJacleBTJ_K1UMfPw2wtzpkLk";        // <-- your anon/public key
 
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-
+const { createClient } = supabase;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // 2. Connect to the form
