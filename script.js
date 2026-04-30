@@ -1,8 +1,9 @@
-const form = document.getElementById("form");
+const form = document.getElementById("requestForm");
 const statusBox = document.getElementById("status");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   statusBox.textContent = "Submitting...";
 
   const data = Object.fromEntries(new FormData(form));
@@ -15,11 +16,12 @@ form.addEventListener("submit", async (e) => {
     });
 
     if (res.ok) {
-      statusBox.textContent = "Submitted successfully.";
+      statusBox.textContent = "Request submitted successfully.";
       form.reset();
     } else {
       statusBox.textContent = "Submission failed.";
     }
+
   } catch (err) {
     statusBox.textContent = "Network error.";
   }
