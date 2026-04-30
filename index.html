@@ -82,7 +82,23 @@ h1 { text-align: center; }
 <script>
 document.getElementById("form").addEventListener("submit", async function(e) {
   e.preventDefault();
-  alert("Submitted! (Connect backend next)");
+
+  const formData = new FormData(this);
+
+  const data = {
+    name: formData.get("name"),
+    email: formData.get("email"),
+    deadline: formData.get("deadline"),
+    notes: formData.get("notes")
+  };
+
+  await fetch("https://hook.eu1.make.com/36c18or2ar7vx28ac3llumkb2dvlfc53", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  alert("Submitted!");
 });
 </script>
 
