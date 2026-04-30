@@ -4,67 +4,11 @@
 <meta charset="UTF-8">
 <title>Meta-Analysis Services</title>
 
-<style>
-body {
-  font-family: -apple-system, sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
-  margin: 0;
-}
-
-.container {
-  max-width: 700px;
-  margin: 60px auto;
-  padding: 20px;
-}
-
-.card {
-  background: #111827;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  border: none;
-  background: #1f2937;
-  color: white;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  background: #3b82f6;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #2563eb;
-}
-
-h1 {
-  text-align: center;
-}
-
-.status {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 14px;
-  opacity: 0.8;
-}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+
 <div class="container">
   <div class="card">
     <h1>Meta-Analysis Request</h1>
@@ -88,7 +32,7 @@ h1 {
       </select>
 
       <label>Notes</label>
-      <textarea name="notes" placeholder="Describe your research question, outcomes, etc."></textarea>
+      <textarea name="notes"></textarea>
 
       <button type="submit">Submit Request</button>
 
@@ -99,51 +43,7 @@ h1 {
   </div>
 </div>
 
-<script>
-const form = document.getElementById("form");
-const statusBox = document.getElementById("status");
-
-form.addEventListener("submit", async function(e) {
-  e.preventDefault();
-
-  statusBox.textContent = "Submitting...";
-
-  const formData = new FormData(form);
-
-  const data = {
-    name: formData.get("name"),
-    email: formData.get("email"),
-    deadline: formData.get("deadline"),
-    type: formData.get("type"),
-    notes: formData.get("notes")
-  };
-
-  try {
-    const res = await fetch("https://hook.eu1.make.com/36c18or2ar7vx28ac3llumkb2dvlfc53", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
-
-    const text = await res.text();
-
-    console.log("Make response:", text);
-
-    if (res.ok) {
-      statusBox.textContent = "Submitted successfully!";
-      form.reset();
-    } else {
-      statusBox.textContent = "Submission failed. Check console.";
-    }
-
-  } catch (err) {
-    console.error(err);
-    statusBox.textContent = "Network error. Check console.";
-  }
-});
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
