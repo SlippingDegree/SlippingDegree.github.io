@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Meta-Analysis Services</title>
+<style>
+body {
+  font-family: -apple-system, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  margin: 0;
+}
+.container {
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 20px;
+}
+.card {
+  background: #111827;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: none;
+  background: #1f2937;
+  color: white;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background: #3b82f6;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+h1 { text-align: center; }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="card">
+    <h1>Meta-Analysis Request</h1>
+
+    <form id="form">
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Deadline</label>
+      <input type="date" name="deadline">
+
+      <label>Project Type</label>
+      <select name="type">
+        <option>Meta-analysis</option>
+        <option>Systematic Review</option>
+        <option>Update Existing</option>
+      </select>
+
+      <label>Upload Manuscript / Files</label>
+      <input type="file" name="file">
+
+      <label>Notes</label>
+      <textarea name="notes"></textarea>
+
+      <button type="submit">Submit Request</button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+document.getElementById("form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  alert("Submitted! (Connect backend next)");
+});
+</script>
+
+</body>
+</html>
