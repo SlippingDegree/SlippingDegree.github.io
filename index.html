@@ -60,30 +60,31 @@
   <div class="form-card">
     <form id="requestForm">
 
-      <label>Name</label>
-      <input type="text" name="name" required>
+  <label>Name</label>
+  <input type="text" name="name" required>
 
-      <label>Email</label>
-      <input type="email" name="email" required>
+  <label>Email</label>
+  <input type="email" name="email" required>
 
-      <label>Deadline</label>
-      <input type="date" name="deadline">
+  <label>Deadline</label>
+  <input type="date" name="deadline" required>
 
-      <label>Project Type</label>
-      <select name="type">
-        <option>Meta-analysis</option>
-        <option>Systematic Review</option>
-        <option>Update Existing</option>
-      </select>
+  <label>Project Type</label>
+  <select name="project_type" required>
+    <option value="">-- Select --</option>
+    <option value="Meta-analysis">Meta-analysis</option>
+    <option value="Systematic Review">Systematic Review</option>
+    <option value="Update Existing">Update Existing</option>
+  </select>
 
-      <label>Research Details</label>
-      <textarea name="notes" placeholder="Research question, outcomes, dataset info..."></textarea>
+  <label>Research Details</label>
+  <textarea name="notes" placeholder="Research question, outcomes, dataset info..."></textarea>
 
-      <button type="submit">Submit Request</button>
+  <button type="submit">Submit Request</button>
 
-      <div class="status" id="status"></div>
+  <div class="status" id="status"></div>
 
-    </form>
+</form>
   </div>
 </section>
 
