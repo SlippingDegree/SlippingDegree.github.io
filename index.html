@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Meta-Analysis Services</title>
+
 <style>
 body {
   font-family: -apple-system, sans-serif;
@@ -10,17 +11,20 @@ body {
   color: #e5e7eb;
   margin: 0;
 }
+
 .container {
   max-width: 700px;
   margin: 60px auto;
   padding: 20px;
 }
+
 .card {
   background: #111827;
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
+
 input, textarea, select {
   width: 100%;
   padding: 10px;
@@ -31,6 +35,7 @@ input, textarea, select {
   background: #1f2937;
   color: white;
 }
+
 button {
   width: 100%;
   padding: 12px;
@@ -41,7 +46,21 @@ button {
   font-weight: bold;
   cursor: pointer;
 }
-h1 { text-align: center; }
+
+button:hover {
+  background: #2563eb;
+}
+
+h1 {
+  text-align: center;
+}
+
+.status {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+}
 </style>
 </head>
 
@@ -51,6 +70,7 @@ h1 { text-align: center; }
     <h1>Meta-Analysis Request</h1>
 
     <form id="form">
+
       <label>Name</label>
       <input type="text" name="name" required>
 
@@ -67,38 +87,61 @@ h1 { text-align: center; }
         <option>Update Existing</option>
       </select>
 
-      <label>Upload Manuscript / Files</label>
-      <input type="file" name="file">
-
       <label>Notes</label>
-      <textarea name="notes"></textarea>
+      <textarea name="notes" placeholder="Describe your research question, outcomes, etc."></textarea>
 
       <button type="submit">Submit Request</button>
+
+      <div class="status" id="status"></div>
+
     </form>
 
   </div>
 </div>
 
 <script>
-document.getElementById("form").addEventListener("submit", async function(e) {
+const form = document.getElementById("form");
+const statusBox = document.getElementById("status");
+
+form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  const formData = new FormData(this);
+  statusBox.textContent = "Submitting...";
+
+  const formData = new FormData(form);
 
   const data = {
     name: formData.get("name"),
     email: formData.get("email"),
     deadline: formData.get("deadline"),
+    type: formData.get("type"),
     notes: formData.get("notes")
   };
 
-  await fetch("https://hook.eu1.make.com/36c18or2ar7vx28ac3llumkb2dvlfc53", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+  try {
+    const res = await fetch("https://hook.eu1.make.com/36c18or2ar7vx28ac3llumkb2dvlfc53", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
 
-  alert("Submitted!");
+    const text = await res.text();
+
+    console.log("Make response:", text);
+
+    if (res.ok) {
+      statusBox.textContent = "Submitted successfully!";
+      form.reset();
+    } else {
+      statusBox.textContent = "Submission failed. Check console.";
+    }
+
+  } catch (err) {
+    console.error(err);
+    statusBox.textContent = "Network error. Check console.";
+  }
 });
 </script>
 
