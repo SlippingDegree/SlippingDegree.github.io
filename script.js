@@ -5,25 +5,25 @@ const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 const { createClient } = supabase;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// 2. Connect to the form
+// 2. Link to your form and status box
 const form = document.getElementById("requestForm");
 const statusBox = document.getElementById("status");
 
+// 3. Attach the form handler (the "submit" event)
 form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  statusBox.textContent = "Submitting...";
+  e.preventDefault();                   // ← stops the page from reloading
+  statusBox.textContent = "Submitting..."; // ← show loading text
 
-  // Read form fields (name matches your HTML names)
+  // Read values from your form fields (they match your HTML names)
   const name = form.name.value.trim();
   const email = form.email.value.trim();
-  const deadline = form.deadline.value; // ISO string, e.g. "2026-05-15"
+  const deadline = form.deadline.value; // e.g. "2026-05-15"
   const project_type = form.project_type.value;
   const notes = form.notes.value.trim();
-  const fileInput = form.querySelector("input[name='file']"); // if you add file upload
 
+  // Optional: file upload (only if you add <input name="file" ...>)
   let fileUrl = null;
-
-  // 1. Upload file (only if you add a file field)
+  const fileInput = form.querySelector("input[name='file']");
   if (fileInput && fileInput.files.length > 0) {
     const file = fileInput.files[0];
     const bucketName = "research_uploads";
@@ -42,16 +42,14 @@ form.addEventListener("submit", async (e) => {
       return;
     }
 
-    // Get public URL
     const { data: publicUrlData } = supabase.storage
       .from(bucketName)
       .getPublicUrl(path);
-
     fileUrl = publicUrlData.publicUrl;
   }
 
-  // 2. Insert into `submissions` table
-  const { data, error: insertError } = await supabase
+  // 4. Insert into the 'submissions' table
+  const { data, error } = await supabase
     .from("submissions")
     .insert([
       {
@@ -64,12 +62,13 @@ form.addEventListener("submit", async (e) => {
       },
     ]);
 
-  if (insertError) {
-    console.error("Insert error:", insertError);
-    statusBox.textContent = "Your request is saved, but something went wrong.";
+  if (error) {
+    console.error("Insert error:", error);
+    statusBox.textContent = "Failed to save your submission.";
     return;
   }
 
+  // 5. Show success and reset form
   statusBox.textContent = "Request submitted successfully.";
   form.reset();
 });
