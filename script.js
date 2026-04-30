@@ -1,29 +1,28 @@
-// 1. Initialize Supabase client
+// Initialize Supabase client
 const supabaseUrl = "https://ozhjabqkrnqxpphnyldz.supabase.co";  // <-- your project URL
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aGphYnFrcm5xeHBwaG55bGR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzQ3ODksImV4cCI6MjA5MzE1MDc4OX0.Gq4Rb0778UsSAD_7DuyJacleBTJ_K1UMfPw2wtzpkLk";        // <-- your anon/public key
 
 const { createClient } = supabase;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// 2. Link to your form and status box
+// Connect to your form and status box
 const form = document.getElementById("requestForm");
 const statusBox = document.getElementById("status");
 
-// 3. Attach the form handler (the "submit" event)
+// Attach the form handler
 form.addEventListener("submit", async (e) => {
-  e.preventDefault();                   // ← stops the page from reloading
-  statusBox.textContent = "Submitting..."; // ← show loading text
+  e.preventDefault();
+  statusBox.textContent = "Submitting...";
 
-  // Read values from your form fields (they match your HTML names)
   const name = form.name.value.trim();
   const email = form.email.value.trim();
-  const deadline = form.deadline.value; // e.g. "2026-05-15"
+  const deadline = form.deadline.value;
   const project_type = form.project_type.value;
   const notes = form.notes.value.trim();
 
-  // Optional: file upload (only if you add <input name="file" ...>)
+  // Optional: file upload (remove this block if you don’t want files yet)
   let fileUrl = null;
-  const fileInput = form.querySelector("input[name='file']");
+  const fileInput = form.querySelector("input[name='file']"); // only if you add <input name="file">
   if (fileInput && fileInput.files.length > 0) {
     const file = fileInput.files[0];
     const bucketName = "research_uploads";
@@ -48,7 +47,7 @@ form.addEventListener("submit", async (e) => {
     fileUrl = publicUrlData.publicUrl;
   }
 
-  // 4. Insert into the 'submissions' table
+  // Insert into Supabase
   const { data, error } = await supabase
     .from("submissions")
     .insert([
@@ -68,7 +67,6 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // 5. Show success and reset form
   statusBox.textContent = "Request submitted successfully.";
   form.reset();
 });
