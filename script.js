@@ -1,9 +1,9 @@
-// Initialize Supabase client
-const supabaseUrl = "https://ozhjabqkrnqxpphnyldz.supabase.co";  // <-- your project URL
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aGphYnFrcm5xeHBwaG55bGR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzQ3ODksImV4cCI6MjA5MzE1MDc4OX0.Gq4Rb0778UsSAD_7DuyJacleBTJ_K1UMfPw2wtzpkLk";        // <-- your anon/public key
+// Initialize Supabase client (using a new variable name, not `supabase`)
+const supabaseUrl = "https://ozhjabqkrnqxpphnyldz.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aGphYnFrcm5xeHBwaG55bGR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzQ3ODksImV4cCI6MjA5MzE1MDc4OX0.Gq4Rb0778UsSAD_7DuyJacleBTJ_K1UMfPw2wtzpkLk";
 
-const { createClient } = supabase;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Use the existing `supabase` object from the CDN; create our client instance
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 // Connect to your form and status box
 const form = document.getElementById("requestForm");
@@ -28,7 +28,7 @@ form.addEventListener("submit", async (e) => {
     const bucketName = "research_uploads";
     const path = `research/${Date.now()}_${file.name}`;
 
-    const { data, error: uploadError } = await supabase.storage
+    const { data, error: uploadError } = await supabaseClient.storage
       .from(bucketName)
       .upload(path, file, {
         cacheControl: "3600",
@@ -41,14 +41,15 @@ form.addEventListener("submit", async (e) => {
       return;
     }
 
-    const { data: publicUrlData } = supabase.storage
+    const { data: publicUrlData } = supabaseClient.storage
       .from(bucketName)
       .getPublicUrl(path);
+
     fileUrl = publicUrlData.publicUrl;
   }
 
   // Insert into Supabase
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("submissions")
     .insert([
       {
@@ -60,6 +61,10 @@ form.addEventListener("submit", async (e) => {
         file_url: fileUrl,
       },
     ]);
+
+  // Always log this so we can see what’s happening
+  console.log("insert data:", data);
+  console.log("insert error:", error);
 
   if (error) {
     console.error("Insert error:", error);
