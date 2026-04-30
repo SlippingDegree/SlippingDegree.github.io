@@ -1,82 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
 <title>Meta-Analysis Services</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<div class="container">
-
-<nav>
-  <div class="logo">MetaLab</div>
-  <div>
-    <a href="#services">Services</a>
-    <a href="#process">Process</a>
-    <a href="#request">Request</a>
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-content">
+    <h1>High-Quality Meta-Analysis & Systematic Reviews</h1>
+    <p>Clinically structured evidence synthesis tailored for researchers, clinicians, and academic projects.</p>
+    <a href="#form" class="cta-button">Request a Project</a>
   </div>
-</nav>
+</header>
 
-<section class="hero">
-  <h1>High-Quality Meta-Analysis & Systematic Reviews</h1>
-  <p>We help researchers, clinicians, and students turn research questions into publication-ready evidence synthesis.</p>
-  <button onclick="document.getElementById('request').scrollIntoView({behavior:'smooth'})">Start a Request</button>
-</section>
+<!-- BENEFITS -->
+<section class="section">
+  <h2>Why Work With Us</h2>
 
-<section id="services" class="section">
-  <h2>Services</h2>
   <div class="grid">
-    <div class="card"><h3>Meta-Analysis</h3><p>Pooled statistical evidence synthesis.</p></div>
-    <div class="card"><h3>Systematic Reviews</h3><p>Structured literature review process.</p></div>
-    <div class="card"><h3>Updates</h3><p>Refresh existing reviews with new studies.</p></div>
+    <div class="card">
+      <h3>Evidence-Based</h3>
+      <p>PRISMA-aligned methodology with structured research design.</p>
+    </div>
+
+    <div class="card">
+      <h3>Clear Reporting</h3>
+      <p>Clean, publication-ready summaries and slides.</p>
+    </div>
+
+    <div class="card">
+      <h3>Fast Turnaround</h3>
+      <p>Optimized workflow for academic deadlines.</p>
+    </div>
   </div>
 </section>
 
-<section id="process" class="section">
-  <h2>Process</h2>
-  <div class="grid">
-    <div class="card"><h3>1. Submit</h3><p>Send your research question.</p></div>
-    <div class="card"><h3>2. Design</h3><p>Define criteria and methodology.</p></div>
-    <div class="card"><h3>3. Analysis</h3><p>Conduct synthesis and stats.</p></div>
-    <div class="card"><h3>4. Delivery</h3><p>Receive final report.</p></div>
+<!-- PROCESS -->
+<section class="section dark">
+  <h2>How It Works</h2>
+
+  <ol class="steps">
+    <li>You submit your research question</li>
+    <li>We refine inclusion criteria & methodology</li>
+    <li>We perform synthesis & analysis</li>
+    <li>You receive final report / slides</li>
+  </ol>
+</section>
+
+<!-- FORM -->
+<section class="section" id="form">
+  <h2>Request Your Project</h2>
+
+  <div class="form-card">
+    <form id="requestForm">
+
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Deadline</label>
+      <input type="date" name="deadline">
+
+      <label>Project Type</label>
+      <select name="type">
+        <option>Meta-analysis</option>
+        <option>Systematic Review</option>
+        <option>Update Existing</option>
+      </select>
+
+      <label>Research Details</label>
+      <textarea name="notes" placeholder="Research question, outcomes, dataset info..."></textarea>
+
+      <button type="submit">Submit Request</button>
+
+      <div class="status" id="status"></div>
+
+    </form>
   </div>
 </section>
 
-<section id="request" class="section">
-  <h2>Request a Project</h2>
-
-  <form id="form">
-    <label>Name</label>
-    <input type="text" name="name" required>
-
-    <label>Email</label>
-    <input type="email" name="email" required>
-
-    <label>Deadline</label>
-    <input type="date" name="deadline">
-
-    <label>Project Type</label>
-    <select name="type">
-      <option>Meta-analysis</option>
-      <option>Systematic Review</option>
-      <option>Update Existing</option>
-    </select>
-
-    <label>Notes</label>
-    <textarea name="notes"></textarea>
-
-    <button class="submit" type="submit">Submit</button>
-    <div class="status" id="status"></div>
-  </form>
-</section>
-
-<footer>
-  © 2026 MetaLab
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© 2026 Meta-Analysis Services</p>
 </footer>
-
-</div>
 
 <script src="script.js"></script>
 </body>
