@@ -1,15 +1,20 @@
+/* =========================
+   DESIGN SYSTEM VARIABLES
+========================= */
 :root {
   /* COLORS */
   --bg: #121414;
   --surface: #1e2020;
   --surface-low: #1a1c1c;
+
   --text-primary: #e3e2e2;
   --text-secondary: #c1c8c9;
 
   --primary: #afccd2;
   --accent: #A8D5B8;
+
   --border-dark: rgba(184, 205, 193, 0.2);
-  --border-light: rgba(3, 33, 38, 0.15);
+  --border-strong: rgba(184, 205, 193, 0.6);
 
   /* TYPOGRAPHY */
   --font-heading: "Space Grotesk", sans-serif;
@@ -26,125 +31,238 @@
   --container-max: 1280px;
 }
 
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-primary);
 }
 
-/* HERO */
+/* =========================
+   TYPOGRAPHY
+========================= */
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  margin-bottom: var(--space-sm);
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 500;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 var(--space-md);
+}
+
+/* =========================
+   CONTAINER SYSTEM
+========================= */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  position: relative;
+}
+
+/* vertical boundary lines */
+.container::before,
+.container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-dark);
+}
+
+.container::before {
+  left: 0;
+}
+
+.container::after {
+  right: 0;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+.section {
+  padding: var(--space-xl) 0;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+/* =========================
+   HERO
+========================= */
 .hero {
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  padding: 100px 20px;
-  text-align: center;
-}
-
-.hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
+  padding: 120px 0;
+  border-bottom: 1px solid var(--border-dark);
+  text-align: left;
 }
 
 .hero p {
   max-width: 600px;
-  margin: 0 auto 20px;
-  opacity: 0.85;
 }
 
-.cta-button {
-  display: inline-block;
-  padding: 12px 20px;
-  background: #3b82f6;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-}
-
-.cta-button:hover {
-  background: #2563eb;
-}
-
-/* SECTIONS */
-.section {
-  padding: 60px 20px;
-  max-width: 1000px;
-  margin: auto;
-  text-align: center;
-}
-
-.section.dark {
-  background: #111827;
-  border-radius: 12px;
-}
-
-/* GRID */
+/* =========================
+   GRID
+========================= */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-top: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
 }
 
+/* =========================
+   CARDS (DATA CONTAINERS)
+========================= */
 .card {
-  background: #1f2937;
-  padding: 20px;
-  border-radius: 12px;
+  background: var(--surface);
+  padding: var(--space-md);
+  border: 1px solid var(--border-dark);
+  position: relative;
 }
 
-/* STEPS */
+/* statistical accent line */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 40px;
+  background: var(--accent);
+}
+
+/* hover = border emphasis (NO shadow) */
+.card:hover {
+  border-color: var(--border-strong);
+}
+
+/* =========================
+   STEPS (PROCESS)
+========================= */
 .steps {
-  text-align: left;
   max-width: 600px;
-  margin: 20px auto;
   line-height: 1.8;
+  padding-left: 16px;
 }
 
-/* FORM */
-.form-card {
-  max-width: 600px;
-  margin: auto;
-  background: #111827;
-  padding: 25px;
-  border-radius: 12px;
+.steps li {
+  margin-bottom: var(--space-sm);
+  color: var(--text-secondary);
 }
 
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  border: none;
-  background: #1f2937;
-  color: white;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  background: #3b82f6;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
+/* =========================
+   BUTTONS
+========================= */
+button,
+.cta-button {
+  display: inline-block;
+  background: var(--accent);
+  color: #032126;
+  border: 1px solid var(--accent);
+  padding: 12px 16px;
+  font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
 }
 
-button:hover {
-  background: #2563eb;
+/* interaction = inversion (not elevation) */
+button:hover,
+.cta-button:hover {
+  background: transparent;
+  color: var(--accent);
 }
 
-/* STATUS */
+/* =========================
+   FORM (DATA INTERFACE)
+========================= */
+.form-card {
+  max-width: 600px;
+  border: 1px solid var(--border-dark);
+  padding: var(--space-md);
+}
+
+/* inputs = minimal, technical */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 8px 0;
+  margin-bottom: var(--space-md);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-dark);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+/* focus = accent line */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-bottom: 1px solid var(--accent);
+}
+
+/* labels */
+label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* =========================
+   STATUS TEXT
+========================= */
 .status {
-  margin-top: 10px;
-  font-size: 14px;
-  opacity: 0.8;
+  margin-top: var(--space-sm);
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
-/* FOOTER */
+/* =========================
+   FOOTER
+========================= */
 .footer {
+  padding: var(--space-lg) 0;
   text-align: center;
-  padding: 30px;
-  opacity: 0.6;
+  color: var(--text-secondary);
+}
+
+/* =========================
+   UTILITIES
+========================= */
+.mt-lg {
+  margin-top: var(--space-lg);
+}
+
+.text-center {
+  text-align: center;
 }
