@@ -1,3 +1,31 @@
+:root {
+  /* COLORS */
+  --bg: #121414;
+  --surface: #1e2020;
+  --surface-low: #1a1c1c;
+  --text-primary: #e3e2e2;
+  --text-secondary: #c1c8c9;
+
+  --primary: #afccd2;
+  --accent: #A8D5B8;
+  --border-dark: rgba(184, 205, 193, 0.2);
+  --border-light: rgba(3, 33, 38, 0.15);
+
+  /* TYPOGRAPHY */
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* SPACING */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+
+  /* LAYOUT */
+  --container-max: 1280px;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, sans-serif;
