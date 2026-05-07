@@ -47,39 +47,41 @@
   <header class="site-header">
     <nav class="nav" aria-label="Main navigation">
       <div class="nav__container">
+        <div class="nav__content">
+          <a class="nav__logo" href="#" aria-label="MetaSynth – go to homepage">
+            <svg class="nav__logo-icon" aria-hidden="true">
+              <use href="#icon-logo" />
+            </svg>
+            <span class="nav__logo-text">MetaSynth</span>
+          </a>
 
-        <a class="nav__logo" href="#" aria-label="MetaSynth – go to homepage">
-          <svg class="nav__logo-icon" aria-hidden="true">
-            <use href="#icon-logo" />
-          </svg>
-          <span class="nav__logo-text">MetaSynth</span>
-        </a>
+          <div class="nav__main">
+            <ul class="nav__links" role="list">
+              <li>
+                <a class="nav__link" href="#">
+                  Product
+                  <svg class="nav__link-icon" aria-hidden="true">
+                    <use href="#icon-chevron-down" />
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a class="nav__link" href="#">
+                  Solutions
+                  <svg class="nav__link-icon" aria-hidden="true">
+                    <use href="#icon-chevron-down" />
+                  </svg>
+                </a>
+              </li>
+              <li><a class="nav__link" href="#">Resources</a></li>
+            </ul>
 
-        <ul class="nav__links" role="list">
-          <li>
-            <a class="nav__link" href="#">
-              Product
-              <svg class="nav__link-icon" aria-hidden="true">
-                <use href="#icon-chevron-down" />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a class="nav__link" href="#">
-              Solutions
-              <svg class="nav__link-icon" aria-hidden="true">
-                <use href="#icon-chevron-down" />
-              </svg>
-            </a>
-          </li>
-          <li><a class="nav__link" href="#">Resources</a></li>
-        </ul>
-
-        <div class="nav__cta">
-          <a class="nav__login" href="#">Log in</a>
-          <a class="btn btn--nav" href="#request">Initialize Review</a>
+            <div class="nav__cta">
+              <a class="nav__login" href="#">Log in</a>
+              <a class="btn btn--nav" href="#request">Initialize Review</a>
+            </div>
+          </div>
         </div>
-
       </div>
     </nav>
   </header>

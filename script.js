@@ -96,12 +96,27 @@ function getDotCount() {
   return Math.floor(Math.random() * 40) + 80;                 // 80–120
 }
 
+let currentBreakpoint = '';
+
 /**
  * Initialise all SVG visualisation canvases on the page.
  */
 function initDataViz() {
+  const w = window.innerWidth;
+  let newBreakpoint = 'desktop';
+  if (w < 640) newBreakpoint = 'mobile';
+  else if (w < 1024) newBreakpoint = 'tablet';
+
+  // Only recreate if we crossed a breakpoint to avoid "broken" animations on minor resize
+  if (newBreakpoint === currentBreakpoint) return;
+  currentBreakpoint = newBreakpoint;
+
   const heroViz = document.getElementById('hero-viz');
   const dividerViz = document.getElementById('divider-viz');
+  
+  if (heroViz) heroViz.innerHTML = '';
+  if (dividerViz) dividerViz.innerHTML = '';
+
   const dotCount = getDotCount();
 
   if (heroViz) {
@@ -119,10 +134,12 @@ function initDataViz() {
 
   if (dividerViz) {
     const dividerColors = ['#937377', '#4C7C73', '#A06754', '#9CB6E0', '#ff0000'];
+    const isMobile = window.innerWidth < 768;
+    
     generateDots(dividerViz, {
       count: dotCount,
-      minR: 2.0,
-      maxR: 4.2, // Significantly larger as requested
+      minR: isMobile ? 1.2 : 2.0,
+      maxR: isMobile ? 2.8 : 4.2, // Smaller dots on mobile
       minOpacity: 0.25,
       maxOpacity: 0.65,
       colors: dividerColors,
@@ -134,6 +151,8 @@ function initDataViz() {
     runRandomPopoffs(dividerViz);
   }
 }
+
+let popoffTimeout = null; // Track the loop to prevent duplicates on resize
 
 /**
  * Enhanced generateDots to handle multi-color palettes
@@ -201,76 +220,90 @@ function generateDots(svgEl, options) {
 
 /**
  * Automates the appearance of random tooltips (pop-offs) based on user-defined timing rules.
+ * Supports multiple concurrent tooltips (max 3).
  */
 function runRandomPopoffs(svgEl) {
-  const tooltip = document.getElementById('global-tooltip');
-  if (!tooltip) return;
-
-  // Create a reusable highlight ring
-  const highlightRing = document.createElementNS(SVG_NS, 'circle');
-  highlightRing.setAttribute('class', 'data-viz__highlight-ring');
-  highlightRing.setAttribute('r', '6'); // Tighter fit as requested (dots are up to 4.2)
-  highlightRing.setAttribute('fill', 'none');
-  highlightRing.setAttribute('stroke', '#fff');
-  highlightRing.setAttribute('stroke-width', '1.5');
-  highlightRing.style.opacity = '0';
-  highlightRing.style.transition = 'opacity 0.8s ease';
-  svgEl.appendChild(highlightRing);
+  // Clear any existing timeout loop first
+  if (popoffTimeout) {
+    clearTimeout(popoffTimeout);
+    popoffTimeout = null;
+  }
 
   const dotCooldowns = new Map();
   const DOT_COOLDOWN_MS = 20000;
-  const TRIGGER_INTERVAL_MIN = 2500; // Increased slightly for slower pace
+  let activePopoffCount = 0;
+  const MAX_CONCURRENT = 3;
 
-  function triggerNext() {
+  function triggerPopoff() {
+    if (activePopoffCount >= MAX_CONCURRENT) {
+      popoffTimeout = setTimeout(triggerPopoff, 1000);
+      return;
+    }
+
     const dots = Array.from(svgEl.querySelectorAll('.data-viz__dot[data-tooltip]'));
     if (dots.length === 0) return;
 
     const now = Date.now();
     const availableDots = dots.filter(dot => {
       const lastShown = dotCooldowns.get(dot) || 0;
-      return (now - lastShown) >= DOT_COOLDOWN_MS;
+      // Also ensure the dot isn't currently active
+      return (now - lastShown) >= DOT_COOLDOWN_MS && !dot.classList.contains('data-viz__dot--active');
     });
 
     if (availableDots.length > 0) {
       const dot = availableDots[Math.floor(Math.random() * availableDots.length)];
-      const duration = 4000; // 4 seconds visibility as requested
+      const duration = 6000; // Increased duration for a less "hasty" feel
 
-      // 1. Sync Highlight Ring & Show Tooltip
-      const rect = dot.getBoundingClientRect();
-      
-      // Sync animation attributes to the ring so it floats with the dot
-      highlightRing.setAttribute('cx', dot.getAttribute('cx'));
-      highlightRing.setAttribute('cy', dot.getAttribute('cy'));
-      highlightRing.style.animationName = dot.getAttribute('data-anim-name');
-      highlightRing.style.animationDuration = dot.getAttribute('data-anim-dur');
-      highlightRing.style.animationDelay = dot.getAttribute('data-anim-del');
-      highlightRing.style.animationTimingFunction = 'ease-in-out';
-      highlightRing.style.animationIterationCount = 'infinite';
-      
-      highlightRing.style.opacity = '1';
-      
+      // 1. Create Dynamic Tooltip
+      const tooltip = document.createElement('div');
+      tooltip.className = 'data-viz__tooltip';
+      tooltip.setAttribute('aria-hidden', 'true');
       tooltip.textContent = dot.getAttribute('data-tooltip');
-      // Position tooltip relative to viewport
-      tooltip.style.left = (rect.left + rect.width / 2) + 'px';
-      tooltip.style.top = (rect.top - 18) + 'px'; // Adjusted for larger dots/ring
-      tooltip.style.opacity = '1';
-
+      
+      const dotColor = dot.getAttribute('fill');
+      tooltip.style.setProperty('--tooltip-bg', dotColor);
+      
+      svgEl.parentElement.appendChild(tooltip);
+      
+      // 2. Mark dot as active
+      activePopoffCount++;
+      dot.classList.add('data-viz__dot--active');
       dotCooldowns.set(dot, now);
 
-      // 2. Wait 4s then Fade Out both
+      // 3. Position Tooltip
+      const rect = dot.getBoundingClientRect();
+      const containerRect = svgEl.parentElement.getBoundingClientRect();
+      const tooltipX = rect.left - containerRect.left + rect.width / 2;
+      const tooltipY = rect.top - containerRect.top - 12;
+      
+      tooltip.style.left = tooltipX + 'px';
+      tooltip.style.top = tooltipY + 'px';
+      
+      // Trigger show
+      requestAnimationFrame(() => {
+        tooltip.style.opacity = '1';
+      });
+
+      // 4. Lifecycle: Fade Out and Remove
       setTimeout(() => {
         tooltip.style.opacity = '0';
-        highlightRing.style.opacity = '0';
+        dot.classList.remove('data-viz__dot--active');
         
-        // 3. Wait at least 2s until another appears
-        setTimeout(triggerNext, 2500); 
+        setTimeout(() => {
+          tooltip.remove();
+          activePopoffCount--;
+        }, 1300); // Wait for 1.2s transition + buffer
       }, duration);
+
+      // Schedule next trigger slower for a more relaxed feel
+      popoffTimeout = setTimeout(triggerPopoff, Math.random() * 3000 + 3000); 
     } else {
-      setTimeout(triggerNext, 1000);
+      popoffTimeout = setTimeout(triggerPopoff, 1500);
     }
   }
 
-  setTimeout(triggerNext, 3000);
+  // Initial delay
+  popoffTimeout = setTimeout(triggerPopoff, 2000);
 }
 
 /* -----------------------------------------------------------------------
@@ -358,10 +391,6 @@ let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    const heroViz = document.getElementById('hero-viz');
-    const dividerViz = document.getElementById('divider-viz');
-    if (heroViz) heroViz.innerHTML = '';
-    if (dividerViz) dividerViz.innerHTML = '';
     initDataViz();
-  }, 400);
+  }, 250); // Faster response
 });
