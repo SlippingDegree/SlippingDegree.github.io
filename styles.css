@@ -436,18 +436,16 @@ button {
   left: 1%;
   right: 1%;
   height: 0.75px;
-  /* Thinner line */
-  background: linear-gradient(to right, transparent 0%, rgb(255, 255, 255) 15%, rgb(255, 255, 255) 85%, transparent 100%);
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.75) 15%, rgb(255, 255, 255, 0.75) 85%, transparent 100%);
   transform: translateY(-50%);
   z-index: 1;
-  opacity: 0.25;
-  /* More subtle */
+  opacity: 0.15;
 }
 
 @media (min-width: 768px) {
   .data-viz__axis {
     height: 1.5px;
-    opacity: 0.5;
+    opacity: 0.15;
   }
 }
 
@@ -476,11 +474,11 @@ button {
   }
 
   33% {
-    transform: translate(2px, -4px);
+    transform: translate(1px, -1px);
   }
 
   66% {
-    transform: translate(-2px, -2px);
+    transform: translate(-1px, -1px);
   }
 }
 
@@ -492,11 +490,11 @@ button {
   }
 
   33% {
-    transform: translate(-3px, 2px);
+    transform: translate(-1px, 1px);
   }
 
   66% {
-    transform: translate(3px, -3px);
+    transform: translate(1px, -1px);
   }
 }
 
@@ -508,11 +506,11 @@ button {
   }
 
   33% {
-    transform: translate(4px, -2px);
+    transform: translate(2px, -1px);
   }
 
   66% {
-    transform: translate(-4px, 4px);
+    transform: translate(-2px, 1px);
   }
 }
 

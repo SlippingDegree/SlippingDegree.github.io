@@ -119,21 +119,22 @@ function initDataViz() {
 
   const dotCount = getDotCount();
 
+  const dividerColors = ['#937377', '#4C7C73', '#A06754', '#9CB6E0', '#ff0000'];
+
   if (heroViz) {
     generateDots(heroViz, {
-      count: Math.round(dotCount * 0.4),
+      count: Math.round(dotCount * 1.5), 
       minR: 1.0,
-      maxR: 2.2, // Slightly larger in hero
-      minOpacity: 0.04,
-      maxOpacity: 0.18,
-      color: '#A8D5B8',
-      animations: [],
+      maxR: 2.2, 
+      minOpacity: 0.25, // Matched with divider for vibrant colors
+      maxOpacity: 0.65, // Matched with divider for vibrant colors
+      colors: dividerColors, 
+      animations: ['dot-float-a', 'dot-float-b', 'dot-float-c'],
       interactive: false,
     });
   }
 
   if (dividerViz) {
-    const dividerColors = ['#937377', '#4C7C73', '#A06754', '#9CB6E0', '#ff0000'];
     const isMobile = window.innerWidth < 768;
     
     generateDots(dividerViz, {
@@ -175,6 +176,7 @@ function generateDots(svgEl, options) {
   for (let i = 0; i < count; i++) {
     const cx = (Math.random() * 98 + 1).toFixed(2) + '%';
     const cy = (Math.random() * 90 + 5).toFixed(2) + '%';
+    
     const r = (Math.random() * (maxR - minR) + minR).toFixed(2);
     const opacity = (Math.random() * (maxOpacity - minOpacity) + minOpacity).toFixed(3);
     const anim = animations.length > 0 ? animations[i % animations.length] : '';
