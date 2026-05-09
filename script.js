@@ -325,8 +325,102 @@ function initRequestForm() {
   const form = document.getElementById('requestForm');
   const statusEl = document.getElementById('status');
   const submitBtn = document.getElementById('submitBtn');
+  const addStudyBtn = document.getElementById('add-study-btn');
+  const studyContainer = document.getElementById('study-entries-container');
+  const dataModelSelect = document.getElementById('field-data-model');
 
   if (!form) return;
+
+  let studyCount = 0;
+
+  // Toggle visible fields based on data model
+  if (dataModelSelect) {
+    dataModelSelect.addEventListener('change', (e) => {
+      const model = e.target.value;
+      form.classList.remove('data-model--dichotomous', 'data-model--continuous');
+      if (model) {
+        form.classList.add(`data-model--${model}`);
+      }
+    });
+  }
+
+  // Add study entry block
+  function addStudyEntry() {
+    studyCount++;
+    const block = document.createElement('div');
+    block.className = 'study-entry-block';
+    block.dataset.index = studyCount;
+    
+    block.innerHTML = `
+      <header class="study-entry-block__header">
+        <h4 class="study-entry-block__title">Study #${studyCount}</h4>
+        <button type="button" class="btn-remove-study" title="Remove study">&times;</button>
+      </header>
+      
+      <div class="request-form__row">
+        <div class="request-form__group">
+          <label class="request-form__label">Study ID (Author, Year)</label>
+          <input type="text" name="study_${studyCount}_id" class="request-form__input" placeholder="e.g., Muller et al., 2024" required>
+        </div>
+        <div class="request-form__group">
+          <label class="request-form__label">Study Design</label>
+          <select name="study_${studyCount}_design" class="request-form__select">
+            <option value="RCT">RCT</option>
+            <option value="Cohort">Cohort</option>
+            <option value="Case-Control">Case-Control</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="request-form__row">
+        <div class="request-form__group">
+          <label class="request-form__label">RoB Status</label>
+          <select name="study_${studyCount}_rob" class="request-form__select">
+            <option value="Low Risk">Low Risk</option>
+            <option value="Some Concerns">Some Concerns</option>
+            <option value="High Risk">High Risk</option>
+          </select>
+        </div>
+        <div class="request-form__group">
+          <label class="request-form__label">Subgroup Tag</label>
+          <input type="text" name="study_${studyCount}_subgroup" class="request-form__input" placeholder="e.g., Pediatric">
+        </div>
+      </div>
+
+      <!-- Conditional Fields -->
+      <div data-model-only="dichotomous">
+        <div class="request-form__row" style="grid-template-columns: repeat(2, 1fr);">
+          <div class="request-form__group"><label class="request-form__label">Int Events</label><input type="number" name="study_${studyCount}_int_ev" class="request-form__input"></div>
+          <div class="request-form__group"><label class="request-form__label">Int Total</label><input type="number" name="study_${studyCount}_int_tot" class="request-form__input"></div>
+          <div class="request-form__group"><label class="request-form__label">Con Events</label><input type="number" name="study_${studyCount}_con_ev" class="request-form__input"></div>
+          <div class="request-form__group"><label class="request-form__label">Con Total</label><input type="number" name="study_${studyCount}_con_tot" class="request-form__input"></div>
+        </div>
+      </div>
+
+      <div data-model-only="continuous">
+        <div class="request-form__row" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="request-form__group"><label class="request-form__label">Int Mean</label><input type="number" step="any" name="study_${studyCount}_int_m" class="request-form__input"></div>
+          <div class="request-form__group"><label class="request-form__label">Int SD</label><input type="number" step="any" name="study_${studyCount}_int_sd" class="request-form__input"></div>
+          <div class="request-form__group"><label class="request-form__label">Int Total</label><input type="number" name="study_${studyCount}_int_n" class="request-form__input"></div>
+          <div class="request-form__group"><label class="request-form__label">Con Mean</label><input type="number" step="any" name="study_${studyCount}_con_m" class="request-form__input"></div>
+          <div class="request-form__group"><label class="request-form__label">Con SD</label><input type="number" step="any" name="study_${studyCount}_con_sd" class="request-form__input"></div>
+          <div class="request-form__group"><label class="request-form__label">Con Total</label><input type="number" name="study_${studyCount}_con_n" class="request-form__input"></div>
+        </div>
+      </div>
+    `;
+
+    block.querySelector('.btn-remove-study').addEventListener('click', () => {
+      block.remove();
+    });
+
+    studyContainer.appendChild(block);
+  }
+
+  if (addStudyBtn) {
+    addStudyBtn.addEventListener('click', addStudyEntry);
+    // Add first study by default
+    addStudyEntry();
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -336,20 +430,56 @@ function initRequestForm() {
       return;
     }
 
-    // Disable submit to prevent double-submission
     submitBtn.disabled = true;
     setStatus(statusEl, 'processing', 'STATUS: PROCESSING…');
 
-    const data = new FormData(form);
+    const formData = new FormData(form);
+    const studies = [];
+    
+    // Iterate through blocks to collect studies
+    const blocks = studyContainer.querySelectorAll('.study-entry-block');
+    blocks.forEach(block => {
+      const idx = block.dataset.index;
+      studies.push({
+        id: formData.get(`study_${idx}_id`),
+        design: formData.get(`study_${idx}_design`),
+        rob: formData.get(`study_${idx}_rob`),
+        subgroup: formData.get(`study_${idx}_subgroup`),
+        // Collect model-specific data
+        dichotomous: {
+          int_ev: formData.get(`study_${idx}_int_ev`),
+          int_tot: formData.get(`study_${idx}_int_tot`),
+          con_ev: formData.get(`study_${idx}_con_ev`),
+          con_tot: formData.get(`study_${idx}_con_tot`)
+        },
+        continuous: {
+          int_m: formData.get(`study_${idx}_int_m`),
+          int_sd: formData.get(`study_${idx}_int_sd`),
+          int_n: formData.get(`study_${idx}_int_n`),
+          con_m: formData.get(`study_${idx}_con_m`),
+          con_sd: formData.get(`study_${idx}_con_sd`),
+          con_n: formData.get(`study_${idx}_con_n`)
+        }
+      });
+    });
+
     const payload = {
-      name: (data.get('name') || '').trim(),
-      email: (data.get('email') || '').trim(),
-      project_type: (data.get('project_type') || '').trim(),
-      notes: (data.get('notes') || '').trim(),
+      name: (formData.get('name') || '').trim(),
+      email: (formData.get('email') || '').trim(),
+      topic: formData.get('topic'),
+      intervention: formData.get('intervention'),
+      control: formData.get('control'),
+      outcome: formData.get('outcome'),
+      data_model: formData.get('data_model'),
+      analysis_engine: formData.get('analysis_engine'),
+      metric: formData.get('metric'),
+      deliverables: formData.getAll('deliverable'),
+      studies: JSON.stringify(studies),
+      subgroup_notes: formData.get('subgroup'),
+      sensitivity_notes: formData.get('sensitivity')
     };
 
-    // Basic client-side validation
-    if (!payload.name || !payload.email || !payload.project_type) {
+    if (!payload.name || !payload.email || !payload.topic) {
       setStatus(statusEl, 'error', 'STATUS: ERROR — REQUIRED FIELDS MISSING');
       submitBtn.disabled = false;
       return;
@@ -360,13 +490,17 @@ function initRequestForm() {
     submitBtn.disabled = false;
 
     if (error) {
-      console.error('[MetaSynth] Supabase insert error:', error);
+      console.error('[SDN] Supabase insert error:', error);
       setStatus(statusEl, 'error', 'STATUS: ERROR — SAVE FAILED. TRY AGAIN.');
       return;
     }
 
     setStatus(statusEl, 'success', 'STATUS: SUCCESS — REQUEST RECEIVED');
     form.reset();
+    studyContainer.innerHTML = '';
+    studyCount = 0;
+    addStudyEntry();
+    form.classList.remove('data-model--dichotomous', 'data-model--continuous');
   });
 }
 

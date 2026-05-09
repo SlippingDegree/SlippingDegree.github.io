@@ -295,36 +295,124 @@
         </header>
 
         <form class="request-form" id="requestForm" novalidate>
-          <div class="request-form__row">
+          
+          <!-- Basic Info -->
+          <fieldset class="request-form__section">
+            <legend class="request-form__legend">Contact Information</legend>
+            <div class="request-form__row">
+              <div class="request-form__group">
+                <label class="request-form__label" for="field-name">Full Name</label>
+                <input class="request-form__input" id="field-name" name="name" type="text" placeholder="Dr. Jane Smith" autocomplete="name" required />
+              </div>
+              <div class="request-form__group">
+                <label class="request-form__label" for="field-email">Institutional Email</label>
+                <input class="request-form__input" id="field-email" name="email" type="email" placeholder="jane.smith@university.edu" autocomplete="email" required />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Section 1 -->
+          <fieldset class="request-form__section">
+            <legend class="request-form__legend">Section 1: The Research Framework</legend>
+            
             <div class="request-form__group">
-              <label class="request-form__label" for="field-name">Full Name</label>
-              <input class="request-form__input" id="field-name" name="name" type="text" placeholder="Dr. Jane Smith"
-                autocomplete="name" required />
+              <label class="request-form__label" for="field-topic">Manuscript Topic/Title</label>
+              <input class="request-form__input" id="field-topic" name="topic" type="text" placeholder="e.g., Efficacy of Drug X vs Placebo for Condition Y" required />
+            </div>
+            
+            <div class="request-form__row">
+              <div class="request-form__group">
+                <label class="request-form__label" for="field-intervention">Intervention/Exposure</label>
+                <input class="request-form__input" id="field-intervention" name="intervention" type="text" placeholder="e.g., Drug X" required />
+              </div>
+              <div class="request-form__group">
+                <label class="request-form__label" for="field-control">Control/Comparator</label>
+                <input class="request-form__input" id="field-control" name="control" type="text" placeholder="e.g., Placebo, Standard Care" required />
+              </div>
+            </div>
+            
+            <div class="request-form__group">
+              <label class="request-form__label" for="field-outcome">Primary Outcome Name</label>
+              <input class="request-form__input" id="field-outcome" name="outcome" type="text" placeholder="e.g., 30-day mortality, weight loss in kg" required />
+            </div>
+          </fieldset>
+
+          <!-- Section 2 -->
+          <fieldset class="request-form__section">
+            <legend class="request-form__legend">Section 2: Statistical Preferences</legend>
+            
+            <div class="request-form__row">
+              <div class="request-form__group">
+                <label class="request-form__label" for="field-data-model">Data Model</label>
+                <select class="request-form__select" id="field-data-model" name="data_model" required>
+                  <option value="" disabled selected>Choose ONE…</option>
+                  <option value="dichotomous">Dichotomous (Events/Non-Events)</option>
+                  <option value="continuous">Continuous (Means/SDs)</option>
+                </select>
+              </div>
+              <div class="request-form__group">
+                <label class="request-form__label" for="field-analysis-engine">Analysis Engine</label>
+                <select class="request-form__select" id="field-analysis-engine" name="analysis_engine" required>
+                  <option value="" disabled selected>Choose ONE…</option>
+                  <option value="random">Random-Effects Model</option>
+                  <option value="fixed">Fixed-Effect Model</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="request-form__group">
+              <label class="request-form__label" for="field-metric">Metric</label>
+              <select class="request-form__select" id="field-metric" name="metric" required>
+                <option value="" disabled selected>Choose ONE…</option>
+                <option value="OR">OR (Odds Ratio)</option>
+                <option value="RR">RR (Risk Ratio)</option>
+                <option value="RD">RD (Risk Difference)</option>
+                <option value="MD">MD (Mean Difference)</option>
+                <option value="SMD">SMD (Standardized Mean Difference)</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <!-- Section 3 -->
+          <fieldset class="request-form__section" id="section-data-input">
+            <legend class="request-form__legend">Section 3: Raw Data Input</legend>
+            <p class="request-form__help-text">Click "Add Study" and fill out a new block for every study included in your review.</p>
+            
+            <div id="study-entries-container">
+              <!-- Study blocks will be injected here via JS -->
+            </div>
+            
+            <button type="button" class="btn btn--add-study" id="add-study-btn">
+              + Add Study Entry
+            </button>
+            
+            <div class="request-form__divider"></div>
+            
+            <div class="request-form__group">
+              <label class="request-form__label">Required Deliverables & Diagnostics</label>
+              <div class="checkbox-grid">
+                <label class="checkbox-label"><input type="checkbox" name="deliverable" value="forest_plot" checked disabled> Forest Plot (Primary)</label>
+                <label class="checkbox-label"><input type="checkbox" name="deliverable" value="funnel_plot"> Funnel Plot (Bias Detection)</label>
+                <label class="checkbox-label"><input type="checkbox" name="deliverable" value="eggers_test"> Egger’s Test</label>
+                <label class="checkbox-label"><input type="checkbox" name="deliverable" value="baujat_plot"> Baujat Plot (Heterogeneity)</label>
+                <label class="checkbox-label"><input type="checkbox" name="deliverable" value="labbe_plot"> L’Abbé Plot</label>
+                <label class="checkbox-label"><input type="checkbox" name="deliverable" value="leave_one_out"> Leave-one-out Analysis</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Section 4 -->
+          <fieldset class="request-form__section">
+            <legend class="request-form__legend">Section 4: Additional Analyses (Optional)</legend>
+            <div class="request-form__group">
+              <label class="request-form__label" for="field-subgroup">Subgroup Analysis</label>
+              <textarea class="request-form__textarea" id="field-subgroup" name="subgroup" rows="3" placeholder="Do you want to split the analysis by a certain variable? e.g., High dose vs Low dose. If yes, specify which studies belong to which group."></textarea>
             </div>
             <div class="request-form__group">
-              <label class="request-form__label" for="field-email">Institutional Email</label>
-              <input class="request-form__input" id="field-email" name="email" type="email"
-                placeholder="jane.smith@university.edu" autocomplete="email" required />
+              <label class="request-form__label" for="field-sensitivity">Sensitivity Analysis/Risk of Bias</label>
+              <textarea class="request-form__textarea" id="field-sensitivity" name="sensitivity" rows="3" placeholder="Are there specific studies you want to test omitting (e.g., studies with a 'High Risk' of bias)? If yes, identify them here."></textarea>
             </div>
-          </div>
-
-          <div class="request-form__group">
-            <label class="request-form__label" for="field-project-type">Project Type</label>
-            <select class="request-form__select" id="field-project-type" name="project_type" required>
-              <option value="" disabled selected>Select a project type…</option>
-              <option value="systematic_review">Systematic Review</option>
-              <option value="meta_analysis">Meta-Analysis</option>
-              <option value="scoping_review">Scoping Review</option>
-              <option value="rapid_review">Rapid Review</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          <div class="request-form__group">
-            <label class="request-form__label" for="field-notes">Notes / Research Question</label>
-            <textarea class="request-form__textarea" id="field-notes" name="notes" rows="4"
-              placeholder="Briefly describe your research question or any specific requirements…"></textarea>
-          </div>
+          </fieldset>
 
           <div class="request-form__footer">
             <button class="btn btn--primary request-form__submit" type="submit" id="submitBtn">
