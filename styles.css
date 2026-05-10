@@ -1087,7 +1087,8 @@ button {
 }
 
 .request-form {
-  max-width: 48rem; /* widened slightly to accommodate data tables */
+  max-width: 48rem;
+  /* widened slightly to accommodate data tables */
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -1116,7 +1117,8 @@ button {
   font-size: 0.875rem;
   color: var(--c-text-muted);
   line-height: 1.5;
-  margin-bottom: -0.5rem; /* pull up slightly against next input */
+  margin-bottom: -0.5rem;
+  /* pull up slightly against next input */
 }
 
 .request-form__textarea--mono {
@@ -1318,14 +1320,97 @@ button {
 
 .request-form__footer {
   display: flex;
-  align-items: center;
-  gap: var(--sp-6);
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-top: var(--sp-4);
+}
+
+.request-form__actions {
+  display: flex;
   flex-wrap: wrap;
+  gap: var(--sp-4);
 }
 
 .form-status {
   font-size: 0.875rem;
   font-family: var(--font-mono);
+}
+
+/* Download Button */
+.download-button {
+  position: relative;
+  border-width: 0;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  z-index: 1;
+  background: transparent;
+}
+
+.download-button .docs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 4px;
+  z-index: 1;
+  background-color: var(--c-surface);
+  border: solid 1px var(--c-border);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  color: var(--c-text-base);
+}
+
+.download-button:hover {
+  box-shadow:
+    rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px,
+    rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px,
+    rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.download {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 80%;
+  margin: 0 auto;
+  z-index: -1;
+  border-radius: 4px;
+  transform: translateY(0%);
+  background-color: var(--c-accent);
+  border: solid 1px rgba(168, 213, 184, 0.3);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  color: var(--c-bg);
+}
+
+.download-button:hover .download {
+  transform: translateY(85%);
+}
+
+.download svg polyline,
+.download svg line {
+  animation: docs-anim 1s infinite;
+}
+
+@keyframes docs-anim {
+  0% {
+    transform: translateY(0%) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8%) scale(1.05);
+  }
+
+  100% {
+    transform: translateY(0%) scale(1);
+  }
 }
 
 .form-status--processing {
@@ -1341,56 +1426,259 @@ button {
 }
 
 /* ------------------------------------------------------------
-   13. CTA SECTION
-   ------------------------------------------------------------ */
-.cta {
-  background-color: var(--c-bg);
-}
-
-.cta__container {
-  padding-block: var(--sp-32);
-  padding-inline: var(--sp-8);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.cta__eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(184, 205, 193, 0.6);
-  margin-bottom: var(--sp-4);
-}
-
-.cta__heading {
-  font-size: clamp(2rem, 5vw, 3.75rem);
-  font-weight: 700;
-  color: var(--c-text-base);
-  line-height: 1.1;
-  margin-bottom: var(--sp-6);
-}
-
-.cta__subtext {
-  color: var(--c-text-muted);
-  font-weight: 300;
-  max-width: 32rem;
-  margin-bottom: var(--sp-10);
-}
-
-/* ------------------------------------------------------------
    14. SITE FOOTER
    ------------------------------------------------------------ */
 .site-footer {
   background-color: var(--c-bg);
 }
 
+.site-footer__viz {
+  position: relative;
+  height: 320px;
+  width: 100%;
+  background: #000;
+  overflow: hidden;
+  opacity: 0.35;
+  mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+}
+
+.site-footer__viz::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: radial-gradient(circle at 50% 50%,
+      #0000 0,
+      #0000 2px,
+      var(--c-bg) 2px);
+  background-size: 8px 8px;
+  animation: 5s ease-in-out hiii infinite;
+  --f: blur(3em) brightness(9);
+}
+
+@keyframes hiii {
+  0% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  25% {
+    backdrop-filter: var(--f) hue-rotate(-25deg);
+  }
+
+  28% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  32% {
+    backdrop-filter: var(--f) hue-rotate(-20deg);
+  }
+
+  39% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  40% {
+    backdrop-filter: var(--f) hue-rotate(-20deg);
+  }
+
+  41% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  42% {
+    backdrop-filter: var(--f) hue-rotate(-25deg);
+  }
+
+  44% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  58% {
+    backdrop-filter: var(--f) hue-rotate(-20deg);
+  }
+
+  64% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  80% {
+    backdrop-filter: var(--f) hue-rotate(-25deg);
+  }
+
+  to {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+}
+
+.site-footer__viz::before {
+  content: "";
+  position: absolute;
+  inset: -145%;
+  rotate: -45deg;
+  --c: var(--c-text-muted);
+  --c1: var(--c-accent);
+  background-image: radial-gradient(4px 100px at 0px 235px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 235px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 117.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 252px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 252px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 126px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 150px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 150px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 75px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 253px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 253px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 126.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 204px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 204px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 102px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 134px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 134px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 67px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 179px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 179px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 89.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 299px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 299px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 149.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 215px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 215px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 107.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 281px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 281px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 140.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 158px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 158px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 79px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 210px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 210px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 105px, var(--c1) 100%, #0000 150%);
+  background-size:
+    300px 235px,
+    300px 235px,
+    300px 235px,
+    300px 252px,
+    300px 252px,
+    300px 252px,
+    300px 150px,
+    300px 150px,
+    300px 150px,
+    300px 253px,
+    300px 253px,
+    300px 253px,
+    300px 204px,
+    300px 204px,
+    300px 204px,
+    300px 134px,
+    300px 134px,
+    300px 134px,
+    300px 179px,
+    300px 179px,
+    300px 179px,
+    300px 299px,
+    300px 299px,
+    300px 299px,
+    300px 215px,
+    300px 215px,
+    300px 215px,
+    300px 281px,
+    300px 281px,
+    300px 281px,
+    300px 158px,
+    300px 158px,
+    300px 158px,
+    300px 210px,
+    300px 210px,
+    300px 210px;
+  animation: hi 150s linear infinite;
+}
+
+@keyframes hi {
+  0% {
+    background-position:
+      0px 220px,
+      3px 220px,
+      151.5px 337.5px,
+      25px 24px,
+      28px 24px,
+      176.5px 150px,
+      50px 16px,
+      53px 16px,
+      201.5px 91px,
+      75px 224px,
+      78px 224px,
+      226.5px 350.5px,
+      100px 19px,
+      103px 19px,
+      251.5px 121px,
+      125px 120px,
+      128px 120px,
+      276.5px 187px,
+      150px 31px,
+      153px 31px,
+      301.5px 120.5px,
+      175px 235px,
+      178px 235px,
+      326.5px 384.5px,
+      200px 121px,
+      203px 121px,
+      351.5px 228.5px,
+      225px 224px,
+      228px 224px,
+      376.5px 364.5px,
+      250px 26px,
+      253px 26px,
+      401.5px 105px,
+      275px 75px,
+      278px 75px,
+      426.5px 180px;
+  }
+
+  to {
+    background-position:
+      0px 6800px,
+      3px 6800px,
+      151.5px 6917.5px,
+      25px 13632px,
+      28px 13632px,
+      176.5px 13758px,
+      50px 5416px,
+      53px 5416px,
+      201.5px 5491px,
+      75px 17175px,
+      78px 17175px,
+      226.5px 17301.5px,
+      100px 5119px,
+      103px 5119px,
+      251.5px 5221px,
+      125px 8428px,
+      128px 8428px,
+      276.5px 8495px,
+      150px 9876px,
+      153px 9876px,
+      301.5px 9965.5px,
+      175px 13391px,
+      178px 13391px,
+      326.5px 13540.5px,
+      200px 14741px,
+      203px 14741px,
+      351.5px 14848.5px,
+      225px 18770px,
+      228px 18770px,
+      376.5px 18910.5px,
+      250px 5082px,
+      253px 5082px,
+      401.5px 5161px,
+      275px 6375px,
+      278px 6375px,
+      426.5px 6480px;
+  }
+}
+
 .site-footer__container {
-  padding-top: var(--sp-16);
   padding-bottom: var(--sp-8);
   padding-inline: 0;
-  /* Horizontal padding handled by internal columns to allow borders to span height */
 }
 
 .site-footer__grid {
@@ -1400,16 +1688,15 @@ button {
   margin-bottom: var(--sp-16);
 }
 
+.site-footer__brand,
+.site-footer__nav {
+  padding-inline: var(--sp-8);
+}
+
 @media (min-width: 768px) {
   .site-footer__grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 0;
-    /* Removing gap to let borders handle the visual separation */
-  }
-
-  .site-footer__brand,
-  .site-footer__nav {
-    padding-inline: var(--sp-8);
   }
 
   .site-footer__nav {

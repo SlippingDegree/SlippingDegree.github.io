@@ -422,21 +422,10 @@ function initRequestForm() {
     addStudyEntry();
   }
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    if (!db) {
-      setStatus(statusEl, 'error', 'STATUS: CLIENT UNAVAILABLE — SUPABASE NOT LOADED');
-      return;
-    }
-
-    submitBtn.disabled = true;
-    setStatus(statusEl, 'processing', 'STATUS: PROCESSING…');
-
+  const getFormPayload = () => {
     const formData = new FormData(form);
     const studies = [];
     
-    // Iterate through blocks to collect studies
     const blocks = studyContainer.querySelectorAll('.study-entry-block');
     blocks.forEach(block => {
       const idx = block.dataset.index;
@@ -445,7 +434,6 @@ function initRequestForm() {
         design: formData.get(`study_${idx}_design`),
         rob: formData.get(`study_${idx}_rob`),
         subgroup: formData.get(`study_${idx}_subgroup`),
-        // Collect model-specific data
         dichotomous: {
           int_ev: formData.get(`study_${idx}_int_ev`),
           int_tot: formData.get(`study_${idx}_int_tot`),
@@ -463,7 +451,7 @@ function initRequestForm() {
       });
     });
 
-    const payload = {
+    return {
       name: (formData.get('name') || '').trim(),
       email: (formData.get('email') || '').trim(),
       topic: formData.get('topic'),
@@ -474,18 +462,91 @@ function initRequestForm() {
       analysis_engine: formData.get('analysis_engine'),
       metric: formData.get('metric'),
       deliverables: formData.getAll('deliverable'),
-      studies: JSON.stringify(studies),
+      studies: studies,
       subgroup_notes: formData.get('subgroup'),
       sensitivity_notes: formData.get('sensitivity')
     };
+  };
 
-    if (!payload.name || !payload.email || !payload.topic) {
+  if (pdfBtn) {
+    pdfBtn.addEventListener('click', () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const payload = getFormPayload();
+      
+      let y = 20;
+      const addLine = (text, size = 10, isBold = false) => {
+        doc.setFontSize(size);
+        doc.setFont("helvetica", isBold ? "bold" : "normal");
+        doc.text(text, 20, y);
+        y += size * 0.6 + 2;
+        if (y > 280) { doc.addPage(); y = 20; }
+      };
+
+      doc.setTextColor(3, 33, 38); // Brand deep teal
+      addLine("SALIH DOSSIER NEXUS — ANALYSIS SPECIFICATION", 14, true);
+      y += 5;
+      
+      doc.setTextColor(0, 0, 0);
+      addLine("SECTION 1: CONTACT & FRAMEWORK", 11, true);
+      addLine(`Client: ${payload.name} (${payload.email})`);
+      addLine(`Topic: ${payload.topic}`);
+      addLine(`Comparison: ${payload.intervention} vs ${payload.control}`);
+      addLine(`Primary Outcome: ${payload.outcome}`);
+      y += 5;
+
+      addLine("SECTION 2: STATISTICAL PREFERENCES", 11, true);
+      addLine(`Data Model: ${payload.data_model}`);
+      addLine(`Analysis Engine: ${payload.analysis_engine}`);
+      addLine(`Metric: ${payload.metric}`);
+      addLine(`Deliverables: ${payload.deliverables.join(", ")}`);
+      y += 5;
+
+      addLine("SECTION 3: STUDY DATA", 11, true);
+      payload.studies.forEach((s, i) => {
+        addLine(`Study #${i+1}: ${s.id} [${s.design}] — RoB: ${s.rob}`, 10, true);
+        if (payload.data_model === 'dichotomous') {
+          addLine(`   Int: ${s.dichotomous.int_ev}/${s.dichotomous.int_tot} | Con: ${s.dichotomous.con_ev}/${s.dichotomous.con_tot}`);
+        } else {
+          addLine(`   Int: Mean ${s.continuous.int_m} (SD ${s.continuous.int_sd}, N ${s.continuous.int_n})`);
+          addLine(`   Con: Mean ${s.continuous.con_m} (SD ${s.continuous.con_sd}, N ${s.continuous.con_n})`);
+        }
+        if (s.subgroup) addLine(`   Tag: ${s.subgroup}`);
+        y += 2;
+      });
+      y += 5;
+
+      if (payload.subgroup_notes || payload.sensitivity_notes) {
+        addLine("SECTION 4: ADDITIONAL ANALYSES", 11, true);
+        if (payload.subgroup_notes) addLine(`Subgroup Plans: ${payload.subgroup_notes}`);
+        if (payload.sensitivity_notes) addLine(`Sensitivity Plans: ${payload.sensitivity_notes}`);
+      }
+
+      doc.save(`SDN_Request_${payload.name.replace(/\s+/g, '_')}.pdf`);
+    });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!db) {
+      setStatus(statusEl, 'error', 'STATUS: CLIENT UNAVAILABLE — SUPABASE NOT LOADED');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    setStatus(statusEl, 'processing', 'STATUS: PROCESSING…');
+
+    const payload = getFormPayload();
+    const dbPayload = { ...payload, studies: JSON.stringify(payload.studies) };
+
+    if (!dbPayload.name || !dbPayload.email || !dbPayload.topic) {
       setStatus(statusEl, 'error', 'STATUS: ERROR — REQUIRED FIELDS MISSING');
       submitBtn.disabled = false;
       return;
     }
 
-    const { error } = await db.from('submissions').insert([payload]);
+    const { error } = await db.from('submissions').insert([dbPayload]);
 
     submitBtn.disabled = false;
 
